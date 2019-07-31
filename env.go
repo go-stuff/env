@@ -49,8 +49,9 @@ func File(path string) error {
 		if err != nil {
 			return err
 		}
+
+		log.Printf("INFO > env.go > File(): %s loaded\n", path)
 	}
 
-	log.Printf("INFO > env.go > File(): %s loaded\n", path)
 	return nil
 }
