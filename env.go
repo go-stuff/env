@@ -18,11 +18,12 @@ func File(path string) error {
 	}
 	defer logger.Sync()
 
-	// if the files does not exist, assume it is using actual environment variables
+	// if the path does not exist
+	// log a warning and use environment variables
 	_, err = os.Stat(path)
 	if os.IsNotExist(err) {
 		logger.Warn(
-			"file does not exist",
+			"path does not exist",
 			zap.String("path", path),
 			zap.String("err", err.Error()),
 		)
@@ -33,7 +34,7 @@ func File(path string) error {
 	file, err := os.Open(path)
 	if err != nil {
 		logger.Error(
-			"unable to open file",
+			"unable to open path",
 			zap.String("err", err.Error()),
 		)
 		return err
@@ -49,7 +50,8 @@ func File(path string) error {
 
 			if len(matches) != 3 {
 				logger.Error(
-					"unable to make a match",
+					"unable to parse",
+					zap.String("line", scanner.Text()),
 					zap.String("err", err.Error()),
 				)
 				return err
