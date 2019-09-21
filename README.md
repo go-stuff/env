@@ -25,18 +25,25 @@ In my example the environment file is `.env` this is an example contents of `.gi
 .env-prod
 ```
 
+`env` uses the package `https://github.com/uber-go/zap` for logging purposes. You can pass it the path to your environment file and a `*zap.logger`.
+
 This is how you would load the contents of the `.env` file into the environment:
 
 ```go
-err := env.File(".env")
-if err != nil {
-    log.Fatalf("failed to parse: %v", err)
-}
+env.File(".env", logger)
 ```
 
 Example output:
 
 ```bash
 github.com/go-stuff/grpc$ go run main.go
-2019/07/12 20:33:39 INFO > env.go > File(): .env loaded
+{"level":"info","ts":1569075534.3478606,"caller":"grpc/main.go:106","msg":"environment file was loaded","path":".env"}
+```
+
+*Note: it the path does not exist it will only `warn` and just load environment variables, but if there is an error with the file or parsing the file it will call `fatal`*
+
+```bash
+{"level":"warn","ts":1569075616.2841346,"caller":"grpc/main.go:39","msg":"path does not exist, using environment variables","path":""}
+
+{"level":"fatal","ts":1569075459.8256843,"caller":"grpc/main.go:47","msg":"path is a directory not a file","path":"./","stacktrace":"..."}
 ```
