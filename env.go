@@ -45,7 +45,7 @@ func File(path string) error {
 	scanner := bufio.NewScanner(file)
 	for scanner.Scan() {
 		if scanner.Text() != "" {
-			regex := regexp.MustCompile(`([a-zA-Z0-9-_]*)\s*=\s*"(.*)"`)
+			regex := regexp.MustCompile(`^\s*([a-zA-Z0-9-_]*)\s*=\s*"(.*)"\s*$`)
 			matches := regex.FindStringSubmatch(scanner.Text())
 
 			if len(matches) != 3 {
@@ -62,6 +62,7 @@ func File(path string) error {
 			if err != nil {
 				logger.Error(
 					"unable to set environment variable",
+					zap.String("line", scanner.Text()),
 					zap.String("err", err.Error()),
 				)
 				return err
